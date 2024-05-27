@@ -4,8 +4,12 @@ import { Text, View, ScrollView, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { FlashList} from '@shopify/flash-list'
 import { Button } from '~/components/ui/button';
+import { api } from '~/utils/api';
 
 const MainScreen = () => {
+
+  const testApi  = api.auth.getSession.useQuery();
+
   return (
    <>
    <Stack.Screen options={{
@@ -28,7 +32,9 @@ const MainScreen = () => {
               }}
               className='flex min-h-[170px] min-w-[170px] items-center
               justify-center rounded-3xl bg-black/40'> 
-                <Text>celebrity voice no. { item+1 }</Text>
+                <Text>
+                  celebrity voice no. { item+1 } {testApi.data?.user?.email}{""}
+                </Text>
               </TouchableOpacity>
             ))
           }

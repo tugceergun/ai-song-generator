@@ -1,14 +1,16 @@
-import { Client } from "@planetscale/database";
-import { drizzle } from "drizzle-orm/planetscale-serverless";
+import { drizzle } from "drizzle-orm/postgres-js";
+import postgres from "postgres";
 
-import { connectionStr } from "./config";
-import * as auth from "./schema/auth";
-import * as post from "./schema/post";
+import * as schema from "./schema";
 
-export * from "drizzle-orm/sql";
-export { alias } from "drizzle-orm/mysql-core";
+export * from "./schema";
+export * from "drizzle-orm";
 
-export const schema = { ...auth, ...post };
+const connectionString = process.env.DATABASE_URL;
 
-const psClient = new Client({ url: connectionStr.href });
-export const db = drizzle(psClient, { schema });
+if (!connectionString) {
+  throw new Error("connection string not found");
+}
+
+const client = postgres(connectionString);
+export const db = drizzle(client);

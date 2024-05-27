@@ -1,39 +1,39 @@
+import type { NextRequest } from "next/server";
+import { cookies } from "next/headers";
+import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
 import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
 
 import { appRouter, createTRPCContext } from "@ai-song-generator/api";
-import { auth } from "@ai-song-generator/auth";
 
-export const runtime = "edge";
+// export const runtime = "edge";
 
 /**
  * Configure basic CORS headers
  * You should extend this to match your needs
  */
-const setCorsHeaders = (res: Response) => {
+function setCorsHeaders(res: Response) {
   res.headers.set("Access-Control-Allow-Origin", "*");
   res.headers.set("Access-Control-Request-Method", "*");
   res.headers.set("Access-Control-Allow-Methods", "OPTIONS, GET, POST");
   res.headers.set("Access-Control-Allow-Headers", "*");
-};
+}
 
-export const OPTIONS = () => {
+export function OPTIONS() {
   const response = new Response(null, {
     status: 204,
   });
   setCorsHeaders(response);
   return response;
-};
+}
 
-const handler = auth(async (req) => {
+const handler = async (req: NextRequest) => {
+  const supabase = createRouteHandlerClient({ cookies });
+
   const response = await fetchRequestHandler({
     endpoint: "/api/trpc",
     router: appRouter,
     req,
-    createContext: () =>
-      createTRPCContext({
-        session: req.auth,
-        headers: req.headers,
-      }),
+    createContext: () => createTRPCContext({ headers: req.headers, supabase }),
     onError({ error, path }) {
       console.error(`>>> tRPC Error on '${path}'`, error);
     },
@@ -41,6 +41,6 @@ const handler = auth(async (req) => {
 
   setCorsHeaders(response);
   return response;
-});
+};
 
 export { handler as GET, handler as POST };

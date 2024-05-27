@@ -1,8 +1,10 @@
 import { fileURLToPath } from "url";
-import createJiti from "jiti";
+import _jiti from "jiti";
+
+const jiti = _jiti(fileURLToPath(import.meta.url));
 
 // Import env files to validate at build time. Use jiti so we can load .ts files in here.
-createJiti(fileURLToPath(import.meta.url))("./src/env");
+jiti("./src/env");
 
 /** @type {import("next").NextConfig} */
 const config = {
@@ -11,7 +13,6 @@ const config = {
   /** Enables hot reloading for local packages without a build step */
   transpilePackages: [
     "@ai-song-generator/api",
-    "@ai-song-generator/auth",
     "@ai-song-generator/db",
     "@ai-song-generator/ui",
     "@ai-song-generator/validators",
