@@ -54,7 +54,7 @@ const MainScreen = () => {
               </TouchableOpacity>
               )
             }}
-            estimatedItemSize={16}
+            estimatedItemSize={12}
             data={Array.from({ length:6 }).map((_, i) => i)}
   
         />

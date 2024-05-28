@@ -117,7 +117,7 @@ const CreateCustomVoice = () => {
             onPressHandler={() => {
               form.handleSubmit(handleCreateCustomVoice)();
             }}
-            //isLoading={createCustomVoice.isPending}
+            isLoading={createCustomVoice.isPending}
           />
         </View>
       </View>
