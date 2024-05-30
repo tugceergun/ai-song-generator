@@ -31,8 +31,8 @@ const MainScreen = () => {
                 })
               }}
               className='flex min-h-[170px] min-w-[170px] items-center
-              justify-center rounded-3xl bg-black/40'> 
-                <Text>
+              justify-center rounded-3xl bg-[#393E46]'> 
+                <Text className='text-white'>
                   celebrity voice no. { item+1 } {testApi.data?.user?.email}{""}
                 </Text>
               </TouchableOpacity>
@@ -49,7 +49,7 @@ const MainScreen = () => {
             renderItem={({ item }) => {
               return(
                 <TouchableOpacity className='mt-4 h-16 w-full items-center justify-center 
-                rounded-lg bg-purple-400'>
+                rounded-lg bg-emerald-400'>
                 <Text>generated song {item+1}</Text>
               </TouchableOpacity>
               )
