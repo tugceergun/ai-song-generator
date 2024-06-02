@@ -22,6 +22,7 @@ export const replicateRouter = createTRPCRouter({
     )
     .mutation(
       async ({ ctx: { db, user }, input: { voiceName, youtubeUrl } }) => {
+
         try {
           const [newVoice] = await db
             .insert(voices)

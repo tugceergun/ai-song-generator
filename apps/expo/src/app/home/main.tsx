@@ -29,7 +29,7 @@ const getAllGeneratedSongs = api.voice.getAllGeneratedSongs.useQuery();
               onPress={() => {
                 router.push({
                   pathname: '/home/generate-song',
-                  params: {id: voice.id},
+                  params: { voiceId: voice.id },
                 })
               }}
               className='flex min-h-[170px] min-w-[170px] items-center
