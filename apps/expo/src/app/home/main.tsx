@@ -5,9 +5,11 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { FlashList} from '@shopify/flash-list'
 import { Button } from '~/components/ui/button';
 import { api } from '~/utils/api';
+import { useSupabaseClient } from '@supabase/auth-helpers-react';
 
 const MainScreen = () => {
 
+const supabase = useSupabaseClient();
 const getAllVoices = api.voice.getAllVoices.useQuery();
 const getAllGeneratedSongs = api.voice.getAllGeneratedSongs.useQuery();
 
@@ -59,14 +61,14 @@ const getAllGeneratedSongs = api.voice.getAllGeneratedSongs.useQuery();
               </TouchableOpacity>
               )
             }}
-            estimatedItemSize={12}
+            estimatedItemSize={10}
             data={getAllGeneratedSongs.data?.allGeneratedSongs ?? [] }
   
         />
 
         </View>
         </ScrollView>
-        <View className='h-[20%] px-4'>
+        <View className='h-[20%] px-4 gap-4'>
 
             <Button
 
@@ -76,6 +78,14 @@ const getAllGeneratedSongs = api.voice.getAllGeneratedSongs.useQuery();
             }}
        
            />
+
+            <Button
+                      buttonText="Sign out"
+                      onPressHandler={async () => {
+                        await supabase.auth.signOut();
+                        router.push("/");
+                      }}
+            />
          
             
 

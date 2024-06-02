@@ -32,6 +32,7 @@
     "tooling/*"
   ],
   "dependencies": {
-    "@shopify/flash-list": "1.6.3"
+    "@shopify/flash-list": "1.6.3",
+    "dotenv": "^16.4.5"
   }
 }
