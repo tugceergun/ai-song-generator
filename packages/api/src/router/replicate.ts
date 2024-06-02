@@ -23,6 +23,7 @@ export const replicateRouter = createTRPCRouter({
     .mutation(
       async ({ ctx: { db, user }, input: { voiceName, youtubeUrl } }) => {
 
+      
         try {
           const [newVoice] = await db
             .insert(voices)
@@ -34,7 +35,7 @@ export const replicateRouter = createTRPCRouter({
 
           await replicate.predictions.create({
             version:
-              "c445e27ff34574e92781c15c67db41835cedcdc27a19f527a7dcf37bd0ffe1ff",
+            "c445e27ff34574e92781c15c67db41835cedcdc27a19f527a7dcf37bd0ffe1ff",
             input: {
               audio_name: slugify(voiceName),
               youtube_url: youtubeUrl,
