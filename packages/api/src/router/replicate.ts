@@ -33,7 +33,7 @@ export const replicateRouter = createTRPCRouter({
             })
             .returning({ voiceId: voices.id });
 
-          await replicate.predictions.create({
+           await replicate.predictions.create({
             version:
             "c445e27ff34574e92781c15c67db41835cedcdc27a19f527a7dcf37bd0ffe1ff",
             input: {
@@ -43,14 +43,20 @@ export const replicateRouter = createTRPCRouter({
             webhook: `${process.env.REPLICATE_WEBHOOK_URL}/api/replicate/custom-voice-dataset-webhook?voiceId=${newVoice?.voiceId}`,
             webhook_events_filter: ["completed"],
           });
+          
         } catch (error) {
           console.log(error);
+          
 
           throw new TRPCError({
             code: "INTERNAL_SERVER_ERROR",
             message: "something went wrong with replicate!",
+            
           });
+
+          
         }
+        
       },
     ),
 });

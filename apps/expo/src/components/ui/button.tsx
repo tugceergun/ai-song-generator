@@ -21,11 +21,11 @@ export const Button = ({
         disabled={isLoading}
         onPress={onPressHandler}
        className={cn(
-        //'flex w-full items-center justify-center rounded-lg bg-white p-4',
+        'flex w-full items-center justify-center rounded-lg bg-black p-4',
         className,
         )}
         >
-        <Text className='text-black'>{isLoading ? "Loading..." : buttonText}</Text>
+        <Text className='text-white'>{isLoading ? "Loading..." : buttonText}</Text>
       </TouchableOpacity>
   )
 }

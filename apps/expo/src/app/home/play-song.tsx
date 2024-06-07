@@ -61,7 +61,7 @@ export const PlaySong = () => {
       <View className='gap-4'>
         <View className='flex flex-row gap-4 justify-center'>
             <Button buttonText='Play' 
-            onPressHandler={playSound} className='w-[50%]'/>
+            onPressHandler={() => playSound()} className='w-[50%]'/>
             <Button buttonText='Pause' 
             onPressHandler={pauseSound} className='w-[50%]' />
             
