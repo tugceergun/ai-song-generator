@@ -2,7 +2,7 @@ import crypto from "crypto";
 import type { NextRequest } from "next/server";
 import Replicate from "replicate";
 
-import { db, eq, voices } from "@ai-song-generator/db";
+import { db, eq, generatedSongs, voices } from "@ai-song-generator/db";
 
 import { env } from "~/env";
 
@@ -25,7 +25,7 @@ const replicate = new Replicate({
   auth: env.REPLICATE_API_TOKEN,
 });
 
-const modelTrainingFinishedWebhook = async (req: NextRequest) => {
+const songGenerationFinished = async (req: NextRequest) => {
   const rawBody = await req.text();
 
   // verify this request if this is coming from replicate, if it is not, send forbidden access code
@@ -74,19 +74,19 @@ const modelTrainingFinishedWebhook = async (req: NextRequest) => {
   }
 
   const { searchParams } = new URL(req.url);
-  const voiceId = searchParams.get("voiceId");
+  const songId = searchParams.get("songId");
 
   const parsedBody = JSON.parse(rawBody);
 
-  if (!voiceId) {
+  if (!songId) {
     return Response.json(
-      { message: "you must specify voiceId in webhook query param" },
+      { message: "you must specify songId in webhook query param" },
       {
         status: 400,
       },
     );
   } 
-  console.log(parsedBody.output, voiceId);
+  console.log(parsedBody.output, songId); // 9.31
 
   if (!parsedBody?.output) {
     return Response.json(
@@ -94,17 +94,17 @@ const modelTrainingFinishedWebhook = async (req: NextRequest) => {
       {
         status: 400,
       },
-    )
+    );
   }
 
   await db
-    .update(voices)
+    .update(generatedSongs)
     .set({
-      modelUrl: parsedBody.output,
+      audioUrl: parsedBody?.output,
     })
-    .where(eq(voices.id, voiceId));
+    .where(eq(generatedSongs.id, songId));
 
-  return Response.json({ hello: "world" });
+  return Response.json({ message: "success" });
 };
 
-export { modelTrainingFinishedWebhook as POST };
+export { songGenerationFinished as POST };

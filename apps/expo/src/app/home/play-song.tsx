@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
 
-import { Image, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { Alert, Image, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
 import { FontAwesome} from'@expo/vector-icons'
-import { router } from 'expo-router'
+import { router, useLocalSearchParams } from 'expo-router'
 import { Button } from '~/components/ui/button';
 import { Audio } from 'expo-av';
 
@@ -13,12 +13,19 @@ export const PlaySong = () => {
 
     const insets = useSafeAreaInsets()
 
+    const params = useLocalSearchParams();
+
     const playSound= async () => {
+       if(!params.url || typeof params.url !== 'string') {
+        return Alert.alert('Error', 'Invalid song url we cant find this song');
+       }
+
+
        try{ 
         !_sound._loaded &&
         (await _sound.loadAsync({
-            uri:"https://eawvvluvpmystrhzcqmc.supabase.co/storage/v1/object/public/songs/perfect-beauty-191271.mp3?t=2024-05-27T12%3A39%3A55.258Z"
-        }))
+            uri: params.url,
+        }));
 
         await _sound.playAsync();
     }catch(error) {
@@ -57,7 +64,7 @@ export const PlaySong = () => {
       <Text className='text-2xl font-semibold text-gray-900'>
         Play generated song</Text>
         <Text className='text-sm font-semibold text-gray-900'>
-        Generate song from youtube video - youtube title</Text>
+        Generate song from youtube video - </Text>
       <View className='gap-4'>
         <View className='flex flex-row gap-4 justify-center'>
             <Button buttonText='Play' 

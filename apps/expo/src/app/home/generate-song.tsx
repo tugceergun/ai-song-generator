@@ -1,6 +1,6 @@
 
 import React from 'react'
-import { Image, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { Alert, Image, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
 import { FontAwesome} from'@expo/vector-icons'
 import { router, useLocalSearchParams } from 'expo-router'
@@ -8,6 +8,7 @@ import { Button } from '~/components/ui/button';
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm, Controller } from "react-hook-form"
 import { z } from "zod"
+import { api } from '~/utils/api';
 
 const formSchema = z.object({
   youtubeUrl: z.string().url({
@@ -29,12 +30,35 @@ function GenerateSong() {
     
   })
 
+  const generateSong = api.voice.generateAISong.useMutation();
+
   //todo: handle generate song
   const handleGenerateSong = (values: z.infer<typeof formSchema>) => {
        
-    console.log(values);
+    console.log(values,params);
 
-  }
+    if(!params.voiceId || typeof params.voiceId !== "string") {
+      return Alert.alert("Voice id is missing!")
+    }
+
+    generateSong.mutate({
+      voiceId: params.voiceId,
+      youtubeUrl: values.youtubeUrl,
+    },
+
+    {
+      onSuccess: () => {
+        Alert.alert("Song generated successfully!")
+      },
+      onError: () => {
+       
+        Alert.alert("Something went wrong!")
+      },
+    },
+  
+  );
+
+  };
 
   return (
     <>
@@ -78,11 +102,9 @@ function GenerateSong() {
         <Text className='text-red-500 font-light text-sm'>{form.formState.errors.youtubeUrl?.message}</Text>
         )}
 
-        <Button buttonText="generate song" onPressHandler={() => {
-            console.log("Generating song from video url", params.id)
-            form.handleSubmit(handleGenerateSong)()
-            router.push("/home/play-song")
-        }}/>
+        <Button buttonText="generate song" onPressHandler={form.handleSubmit(handleGenerateSong)}
+        isLoading={generateSong.isPending}
+        />
         
         </View>
      </View>
@@ -92,3 +114,5 @@ function GenerateSong() {
 }
 
 export default GenerateSong
+
+// router.push("/home/play-song")
