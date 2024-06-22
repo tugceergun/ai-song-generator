@@ -23,9 +23,13 @@ export const replicateRouter = createTRPCRouter({
     .mutation(
       async ({ ctx: { db, user }, input: { voiceName, youtubeUrl } }) => {
 
+<<<<<<< HEAD
 
        
         
+=======
+      
+>>>>>>> 2107f55ffbac77f5c61798cdf210ce347c5fd9de
         try {
           const [newVoice] = await db
             .insert(voices)
@@ -36,9 +40,9 @@ export const replicateRouter = createTRPCRouter({
             })
             .returning({ voiceId: voices.id });
 
-          await replicate.predictions.create({
+           await replicate.predictions.create({
             version:
-              "c445e27ff34574e92781c15c67db41835cedcdc27a19f527a7dcf37bd0ffe1ff",
+            "c445e27ff34574e92781c15c67db41835cedcdc27a19f527a7dcf37bd0ffe1ff",
             input: {
               audio_name: slugify(voiceName),
               youtube_url: youtubeUrl,
@@ -46,14 +50,20 @@ export const replicateRouter = createTRPCRouter({
             webhook: `${process.env.REPLICATE_WEBHOOK_URL}/api/replicate/custom-voice-dataset-webhook?voiceId=${newVoice?.voiceId}`,
             webhook_events_filter: ["completed"],
           });
+          
         } catch (error) {
           console.log(error);
+          
 
           throw new TRPCError({
             code: "INTERNAL_SERVER_ERROR",
             message: "something went wrong with replicate!",
+            
           });
+
+          
         }
+        
       },
     ),
 });

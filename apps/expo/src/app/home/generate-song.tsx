@@ -8,7 +8,6 @@ import { Button } from '~/components/ui/button';
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm, Controller } from "react-hook-form"
 import { z } from "zod"
-import { api } from '~/utils/api';
 
 const formSchema = z.object({
   youtubeUrl: z.string().url({
@@ -32,33 +31,13 @@ function GenerateSong() {
 
   const generateSong = api.voice.generateAISong.useMutation();
 
-  //todo: handle generate song
+  const generateSong = api.voice.generateAISong.useMutation();
+
   const handleGenerateSong = (values: z.infer<typeof formSchema>) => {
        
-    console.log(values,params);
+    console.log(values);
 
-    if(!params.voiceId || typeof params.voiceId !== "string") {
-      return Alert.alert("Voice id is missing!")
-    }
-
-    generateSong.mutate({
-      voiceId: params.voiceId,
-      youtubeUrl: values.youtubeUrl,
-    },
-
-    {
-      onSuccess: () => {
-        Alert.alert("Song generated successfully!")
-      },
-      onError: () => {
-       
-        Alert.alert("Something went wrong!")
-      },
-    },
-  
-  );
-
-  };
+  }
 
   return (
     <>
@@ -102,9 +81,11 @@ function GenerateSong() {
         <Text className='text-red-500 font-light text-sm'>{form.formState.errors.youtubeUrl?.message}</Text>
         )}
 
-        <Button buttonText="generate song" onPressHandler={form.handleSubmit(handleGenerateSong)}
-        isLoading={generateSong.isPending}
-        />
+        <Button buttonText="generate song" onPressHandler={() => {
+            console.log("Generating song from video url", params.id)
+            form.handleSubmit(handleGenerateSong)()
+            router.push("/home/play-song")
+        }}/>
         
         </View>
      </View>
